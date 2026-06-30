@@ -7,6 +7,12 @@ class Lgtmaybe < Formula
   sha256 "88f6f8f41b30dcf23adfe7dcc7e2568828d0d0ae9362ce65753760307c4975e9"
   license "MIT"
 
+  # The dependency wheels ship prebuilt extension dylibs (e.g. jiter) whose
+  # install names use @rpath and lack header padding, so Homebrew cannot rewrite
+  # them to an absolute path ("Failed to fix install linkage"). Preserve the
+  # @rpath ids — they resolve correctly from the venv's fixed location anyway.
+  preserve_rpath
+
   depends_on "ast-grep"
   depends_on "python@3.12"
 
@@ -14,11 +20,9 @@ class Lgtmaybe < Formula
     # lgtmaybe's dependency tree includes Rust extensions (tokenizers, hf-xet)
     # whose sdists cannot build inside Homebrew's sandbox, so install lgtmaybe and
     # its dependencies from upstream PyPI wheels into an isolated virtualenv. The
-    # venv is created plainly (so ensurepip provides pip); the CI bottle build
-    # disables the sandbox so this pip can reach PyPI, and end users pour the
-    # resulting bottle instead of running this.
+    # venv is created plainly so ensurepip provides pip.
     system "python3.12", "-m", "venv", libexec
-    system libexec/"bin/python", "-m", "pip", "install", "--verbose", "lgtmaybe==#{version}"
+    system libexec/"bin/python", "-m", "pip", "install", "lgtmaybe==#{version}"
     bin.install_symlink libexec/"bin/lgtmaybe"
   end
 
