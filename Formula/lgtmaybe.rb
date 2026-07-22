@@ -3,8 +3,8 @@ class Lgtmaybe < Formula
 
   desc "Provider-agnostic pull request reviewer with keyless cloud auth"
   homepage "https://mattjcoles.github.io/lgtmaybe/"
-  url "https://files.pythonhosted.org/packages/76/36/e9332fa94768b531f883ee8278d17c074b7e1b321c9c14d83f9b84757b59/lgtmaybe-0.11.0.tar.gz"
-  sha256 "36446d4ffb1be1a2cc3af429585d7392ff8f27089e08c3fa007935dcfb34848a"
+  url "https://files.pythonhosted.org/packages/49/0c/c29cbc4740aacb856e50ea599ec00ad73d69a1c9e81d2a711526cf404d73/lgtmaybe-0.12.1.tar.gz"
+  sha256 "4e0522a8248ed9703b9d02bd913cc823fe21cef469ba8c0eed692595a731d2e3"
   license "MIT"
 
   # The dependency wheels ship prebuilt extension dylibs (e.g. jiter) whose
@@ -17,12 +17,17 @@ class Lgtmaybe < Formula
   depends_on "python@3.12"
 
   def install
-    # lgtmaybe's dependency tree includes Rust extensions (tokenizers, hf-xet)
-    # whose sdists cannot build inside Homebrew's sandbox, so install lgtmaybe and
-    # its dependencies from upstream PyPI wheels into an isolated virtualenv. The
-    # venv is created plainly so ensurepip provides pip.
+    # lgtmaybe's dependency tree includes Rust extensions (tokenizers, hf-xet,
+    # and litellm >= 1.92, which ships only manylinux wheels) whose sdists
+    # cannot build inside Homebrew's sandbox (no Cargo), so install lgtmaybe
+    # and its dependencies from upstream PyPI wheels into an isolated
+    # virtualenv. --prefer-binary makes pip back off to the newest version
+    # that has a macOS-compatible wheel instead of grabbing a newer sdist it
+    # would then fail to compile. The venv is created plainly so ensurepip
+    # provides pip.
     system "python3.12", "-m", "venv", libexec
-    system libexec/"bin/python", "-m", "pip", "install", "lgtmaybe==#{version}"
+    system libexec/"bin/python", "-m", "pip", "install", "--prefer-binary",
+           "lgtmaybe==#{version}"
     bin.install_symlink libexec/"bin/lgtmaybe"
   end
 
