@@ -3,8 +3,8 @@ class Lgtmaybe < Formula
 
   desc "Provider-agnostic pull request reviewer with keyless cloud auth"
   homepage "https://lgtmaybe.coles.codes/"
-  url "https://files.pythonhosted.org/packages/ec/c7/bb92383a6f1ba81503360c6d9e81eb2a027182dcef9eb78f96b50b430063/lgtmaybe-1.5.1.tar.gz"
-  sha256 "2a8b1b605310628b516faf5aa92765598b96de8dfef4281149c94eb29cba423a"
+  url "https://files.pythonhosted.org/packages/07/2e/948718551ff8d4baaf432e39ce7ddeeab4e0efd414a3cc2c5b5588c1d231/lgtmaybe-1.5.2.tar.gz"
+  sha256 "1ae7d1833bbb8174b1f45017d5cea49e16ee3640382f3d494b402b4ae57bfe22"
   license "MIT"
 
   # The dependency wheels ship prebuilt extension dylibs (e.g. jiter) whose
